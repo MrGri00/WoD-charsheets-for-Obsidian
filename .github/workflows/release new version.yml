@@ -22,7 +22,7 @@ jobs:
               github_token: ${{ secrets.GITHUB_TOKEN }}
 
             # все нужные файлы репозитория собираются в первую папку
-          - name: Collent all files into one archive
+          - name: Collect all files into one archive
             uses: actions/upload-artifact@v4
             with:
                 name: world-of-darkness-statblocks-${{ steps.tag_version.outputs.new_tag }}
@@ -33,21 +33,19 @@ jobs:
                 if-no-files-found: error
 
             # все русскоязычные JSON-файлы собираются в первую папку
-          - name: Collent all RU JSONs into one archive
+          - name: Collect all RU JSONs into one archive
             uses: actions/upload-artifact@v4
             with:
                 name: WoD-statblock-jsons-ru-${{ steps.tag_version.outputs.new_tag }}
-                path: | 
-                  fantasy-statblock-jsons/*
-                  !fantasy-statblock-jsons/*en.json
+                path: fantasy-statblock-jsons/ru/*.json
                 if-no-files-found: error
 
           # все англоязычные JSON-файлы собираются во вторую папку
-          - name: Collent all EN JSONs into one archive
+          - name: Collect all EN-US JSONs into one archive
             uses: actions/upload-artifact@v4
             with:
                 name: WoD-statblock-jsons-en-${{ steps.tag_version.outputs.new_tag }}
-                path: fantasy-statblock-jsons/*en.json
+                path: fantasy-statblock-jsons/en-US/*.json
                 if-no-files-found: error
 
 
@@ -68,7 +66,7 @@ jobs:
 
             # добавляется комментарий с версией в JSON файлы
             - name: Add version comment to JSON files
-              run: sed -i '2 i "version":\ "${{needs.build-prepare.outputs.new-tag-created}}",' ./WoD-statblock-jsons-*/*.json
+              run: find ./WoD-statblock-jsons-* -name "*.json" -type f -exec sed -i '2 i \    "version": "${{needs.build-prepare.outputs.new-tag-created}}",' {} +
 
             # создается отдельный архив для русскоязычных JSON файлов
             - name: Create RU JSON archive
