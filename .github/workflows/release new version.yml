@@ -66,7 +66,8 @@ jobs:
 
             # добавляется комментарий с версией в JSON файлы
             - name: Add version comment to JSON files
-              run: find ./WoD-statblock-jsons-* -name "*.json" -type f -exec sed -i '2 i \    "version": "${{needs.build-prepare.outputs.new-tag-created}}",' {} +
+              run: |
+                find ./WoD-statblock-jsons-* -name "*.json" -type f -exec sed -i '2 i \    "version": "${{ needs.build-prepare.outputs.new-tag-created }}",' {} +
 
             # создается отдельный архив для русскоязычных JSON файлов
             - name: Create RU JSON archive
